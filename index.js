@@ -13,12 +13,8 @@ app.get('/', (req, res) => {
 // GET all countries
 app.get('/api/countries', (req, res) => {
   let allCountries = Data;
-  const { sort, visited } = req.query;
+  const { sort } = req.query;
   if (sort === 'true') allCountries.sort((a, b) => (a.name > b.name ? 1 : -1));
-  if (visited === 'true') {
-    const visitedCountries = allCountries.filter((el) => el.visited === true);
-    allCountries = visitedCountries;
-  }
   res.json(allCountries);
 });
 
@@ -41,7 +37,6 @@ app.post('/api/countries', (req, res) => {
     name,
     alpha2Code,
     alpha3Code,
-    visited: false,
   };
   Data.push(newCountry);
   res.json(Data);
@@ -51,7 +46,7 @@ app.post('/api/countries', (req, res) => {
 app.put('/api/countries/:code', (req, res) => {
   const { code } = req.params;
   code.toUpperCase();
-  const { name, alpha2Code, alpha3Code, visited } = req.body;
+  const { name, alpha2Code, alpha3Code } = req.body;
   const index = Data.findIndex(
     (e) => e.alpha2Code === code || e.alpha3Code === code
   );
@@ -59,7 +54,6 @@ app.put('/api/countries/:code', (req, res) => {
   Data[index].name = name;
   Data[index].alpha2Code = alpha2Code;
   Data[index].alpha3Code = alpha3Code;
-  Data[index].visited = visited;
   res.json(Data);
 });
 
